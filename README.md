@@ -1,32 +1,32 @@
 # Hadoop MapReduce Word Count
 
-Big Data fundamentals project demonstrating distributed word-count processing, stop-word filtering, and scalable text aggregation.
+This is a Big Data fundamentals project focused on distributed text aggregation with Hadoop MapReduce. The repository now keeps the project in its natural format: Java MapReduce code, plus a small Python local simulator for quick validation before running on a Hadoop cluster.
 
-## Portfolio Context
+## What The Project Does
 
-This repository is a cleaned public portfolio version of coursework/project material maintained under Snega Murugan's GitHub profile. Raw folders, virtual environments, private keys, and large datasets were intentionally excluded.
+The mapper tokenizes input text, removes common stop words, and emits `(word, 1)` pairs. The reducer aggregates counts per token. A combiner is configured to reduce network transfer between map and reduce phases.
 
-## Features
+## Repository Structure
 
-- Professional Streamlit dashboard or app entrypoint.
-- Sample data included so the project can run without private credentials.
-- Original analysis/code artifacts preserved where safe.
-- Clear setup and run instructions for recruiters and technical reviewers.
+- `java/WordCount.java` - Hadoop mapper, reducer, combiner, and job configuration.
+- `java/StopWords.java` - stop-word helper used by the mapper.
+- `src/wordcount.py` - local Python implementation of the same counting logic.
+- `scripts/run_local_wordcount.py` - command-line test harness for local text input.
 
-## Setup
-
-```powershell
-python -m venv .venv
-.\.venv\Scriptsctivate
-pip install -r requirements.txt
-```
-
-## Run
+## Local Smoke Test
 
 ```powershell
-streamlit run streamlit_app.py
+python scripts/run_local_wordcount.py < sample.txt
 ```
 
-## Notes
+## Hadoop Run Pattern
 
-- This is an educational portfolio project. Validate results before using them for business or policy decisions.
+```bash
+hadoop com.sun.tools.javac.Main java/WordCount.java java/StopWords.java
+jar cf wordcount.jar *.class
+hadoop jar wordcount.jar WordCount /input/text /output/wordcount
+```
+
+## Portfolio Note
+
+This repo intentionally does not pretend to be a web dashboard. It is a code-first distributed processing project, which is the stronger format for MapReduce coursework.
